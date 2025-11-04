@@ -44,6 +44,15 @@ logs/
 tmp/
 *.tmp
 
+# Database files
+*.db
+*.db-journal
+
+# Environment files
+.env
+.env.* 
+!.env.example
+
 # --- Project data ---
 # Local persistent Chroma + raw/text storage should not be committed
 storage/
@@ -52,11 +61,6 @@ storage/
 # Uploads/samples (optional; uncomment if you create these dirs)
 # uploads/
 # samples/
-
-# Env files
-.env
-.env.*
-!.env.example
 
 # Docker / Compose overrides (optional; uncomment if used)
 # docker-compose.override.yml

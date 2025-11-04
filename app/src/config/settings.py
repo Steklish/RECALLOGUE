@@ -1,0 +1,23 @@
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+class Settings:
+    # Database settings
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./recallogue.db")
+    
+    # Security settings
+    SECRET_KEY: str = os.getenv("SECRET_KEY", "your-secret-key-here-change-this-in-production")
+    ALGORITHM: str = os.getenv("ALGORITHM", "HS256")
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
+    
+    # Server settings
+    SERVER_HOST: str = os.getenv("SERVER_HOST", "127.0.0.1")
+    SERVER_PORT: int = int(os.getenv("SERVER_PORT", "8000"))
+    DEBUG: bool = os.getenv("DEBUG", "False").lower() == "true"
+
+
+# Create a global instance of settings
+settings = Settings()
