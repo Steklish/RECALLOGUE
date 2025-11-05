@@ -11,6 +11,11 @@ from .access_group import (
     AccessGroupInDB
 )
 
+from .token import (
+    TokenData,
+    Token
+)
+
 __all__ = [
     "UserBase",
     "UserCreate", 
@@ -19,5 +24,7 @@ __all__ = [
     "AccessGroupBase",
     "AccessGroupCreate",
     "AccessGroupUpdate",
-    "AccessGroupInDB"
+    "AccessGroupInDB",
+    "Token",
+    "TokenData"
 ]

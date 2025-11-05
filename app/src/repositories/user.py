@@ -2,14 +2,15 @@ from typing import Optional
 from sqlalchemy.orm import Session
 from app.src.models import User, AccessGroup
 from app.src.schema import UserCreate, UserUpdate, AccessGroupCreate, AccessGroupUpdate
+from app.src.schema.user import UserCreateHashed, UserUpdateHashed
 from .base import BaseRepository
 
 
-class UserRepository(BaseRepository[User, UserCreate]):
+class UserRepository(BaseRepository[User, UserCreateHashed]):
     def get_by_username(self, db: Session, username: str) -> Optional[User]:
         return db.query(User).filter(User.username == username).first()
 
-    def update(self, db: Session, *, db_obj: User, obj_in: UserUpdate) -> User:
+    def update(self, db: Session, *, db_obj: User, obj_in: UserUpdateHashed) -> User:
         for field in obj_in.__fields__:
             if hasattr(db_obj, field) and getattr(obj_in, field) is not None:
                 setattr(db_obj, field, getattr(obj_in, field))

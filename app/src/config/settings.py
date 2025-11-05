@@ -13,6 +13,9 @@ class Settings:
     ALGORITHM: str = os.getenv("ALGORITHM", "HS256")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
     
+    # Password hashing settings
+    HASHING_ROUNDS: int = int(os.getenv("HASHING_ROUNDS", "12"))
+    
     # Server settings
     SERVER_HOST: str = os.getenv("SERVER_HOST", "127.0.0.1")
     SERVER_PORT: int = int(os.getenv("SERVER_PORT", "8000"))

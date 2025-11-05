@@ -11,9 +11,18 @@ class UserCreate(UserBase):
     password: str
     group_id: Optional[int] = None
 
+class UserCreateHashed(UserBase):
+    hashed_password: str
+    group_id: Optional[int] = None
+
 
 class UserUpdate(UserBase):
     password: Optional[str] = None
+    group_id: Optional[int] = None
+
+
+class UserUpdateHashed(UserBase):
+    hashed_password: Optional[str] = None
     group_id: Optional[int] = None
 
 

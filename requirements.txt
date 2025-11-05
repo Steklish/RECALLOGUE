@@ -5,3 +5,5 @@ passlib[bcrypt]
 SQLAlchemy
 asyncpg
 python-dotenv
+uvicorn
+python-multipart

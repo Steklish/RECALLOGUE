@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
+
 from app.src.database.session import get_db
 from app.src.services import user_service
 from app.src.schema import UserCreate, UserUpdate, UserInDB
@@ -13,8 +14,10 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     """
     Create a new user.
     """
-    # TODO: Implement user creation logic
-    pass
+    try:
+        return user_service.create_user(db, user)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @router.get("/{user_id}", response_model=UserInDB)
@@ -22,8 +25,10 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
     """
     Get a user by ID.
     """
-    # TODO: Implement get user by ID logic
-    pass
+    db_user = user_service.get_user(db, user_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_user
 
 
 @router.get("/", response_model=List[UserInDB])
@@ -31,8 +36,7 @@ def get_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
     Get a list of users with pagination.
     """
-    # TODO: Implement get all users logic
-    pass
+    return user_service.get_users(db, skip=skip, limit=limit)
 
 
 @router.put("/{user_id}", response_model=UserInDB)
@@ -40,8 +44,13 @@ def update_user(user_id: int, user: UserUpdate, db: Session = Depends(get_db)):
     """
     Update a user by ID.
     """
-    # TODO: Implement update user logic
-    pass
+    updated_user = user_service.update_user(db, user_id, user)
+    if updated_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    try:
+        return updated_user
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @router.delete("/{user_id}")
@@ -49,8 +58,10 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
     """
     Delete a user by ID.
     """
-    # TODO: Implement delete user logic
-    pass
+    success = user_service.delete_user(db, user_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"message": "User deleted successfully"}
 
 
 @router.get("/username/{username}", response_model=UserInDB)
@@ -58,5 +69,7 @@ def get_user_by_username(username: str, db: Session = Depends(get_db)):
     """
     Get a user by username.
     """
-    # TODO: Implement get user by username logic
-    pass
+    db_user = user_service.get_user_by_username(db, username)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_user

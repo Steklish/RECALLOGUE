@@ -13,8 +13,10 @@ def create_access_group(access_group: AccessGroupCreate, db: Session = Depends(g
     """
     Create a new access group.
     """
-    # TODO: Implement access group creation logic
-    pass
+    try:
+        return access_group_service.create_access_group(db, access_group)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @router.get("/{access_group_id}", response_model=AccessGroupInDB)
@@ -22,8 +24,10 @@ def get_access_group(access_group_id: int, db: Session = Depends(get_db)):
     """
     Get an access group by ID.
     """
-    # TODO: Implement get access group by ID logic
-    pass
+    db_access_group = access_group_service.get_access_group(db, access_group_id)
+    if db_access_group is None:
+        raise HTTPException(status_code=404, detail="Access group not found")
+    return db_access_group
 
 
 @router.get("/", response_model=List[AccessGroupInDB])
@@ -31,8 +35,7 @@ def get_access_groups(skip: int = 0, limit: int = 100, db: Session = Depends(get
     """
     Get a list of access groups with pagination.
     """
-    # TODO: Implement get all access groups logic
-    pass
+    return access_group_service.get_access_groups(db, skip=skip, limit=limit)
 
 
 @router.put("/{access_group_id}", response_model=AccessGroupInDB)
@@ -40,8 +43,13 @@ def update_access_group(access_group_id: int, access_group: AccessGroupUpdate, d
     """
     Update an access group by ID.
     """
-    # TODO: Implement update access group logic
-    pass
+    updated_access_group = access_group_service.update_access_group(db, access_group_id, access_group)
+    if updated_access_group is None:
+        raise HTTPException(status_code=404, detail="Access group not found")
+    try:
+        return updated_access_group
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @router.delete("/{access_group_id}")
@@ -49,8 +57,10 @@ def delete_access_group(access_group_id: int, db: Session = Depends(get_db)):
     """
     Delete an access group by ID.
     """
-    # TODO: Implement delete access group logic
-    pass
+    success = access_group_service.delete_access_group(db, access_group_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Access group not found")
+    return {"message": "Access group deleted successfully"}
 
 
 @router.get("/name/{name}", response_model=AccessGroupInDB)
@@ -58,5 +68,7 @@ def get_access_group_by_name(name: str, db: Session = Depends(get_db)):
     """
     Get an access group by name.
     """
-    # TODO: Implement get access group by name logic
-    pass
+    db_access_group = access_group_service.get_access_group_by_name(db, name)
+    if db_access_group is None:
+        raise HTTPException(status_code=404, detail="Access group not found")
+    return db_access_group
