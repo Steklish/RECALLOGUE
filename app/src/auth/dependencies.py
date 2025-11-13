@@ -12,7 +12,7 @@ from app.src.repositories import user_repo
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
+def get_current_user_from_headers(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -88,9 +88,10 @@ def require_group(required_group: str):
     Dependency Factory: Returns a dependency that checks if the current user
     is a member of the specified group.
     """
-    def check_user_group(current_user: User = Depends(get_current_user)) -> User:
-        user_groups = {group.name for group in current_user.groups}
-        if required_group not in user_groups:
+    print(f"[DBG] checking user's group - group {required_group} required")
+    def check_user_group(current_user: User = Depends(get_current_user_from_cookie)) -> User:
+        print(f"[DBG] User {current_user.username} - {current_user.group}/{current_user.group_id}")
+        if required_group != (current_user.group.name if current_user.group else ''):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"Access denied: Requires '{required_group}' role.",

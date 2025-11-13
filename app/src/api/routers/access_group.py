@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
+import fastapi
 from sqlalchemy.orm import Session
 from typing import List
+from app.src.auth.dependencies import require_group
 from app.src.database.session import get_db
 from app.src.services import access_group_service
 from app.src.schema import AccessGroupCreate, AccessGroupUpdate, AccessGroupInDB
@@ -72,3 +74,10 @@ def get_access_group_by_name(name: str, db: Session = Depends(get_db)):
     if db_access_group is None:
         raise HTTPException(status_code=404, detail="Access group not found")
     return db_access_group
+
+
+# for route in router.routes:
+#     if isinstance(route, fastapi.routing.APIRoute):
+#         # The condition is changed to check if 'GET' is NOT in the methods
+#         if "GET" not in route.methods:
+#             route.dependencies.append(Depends(require_group("Admin")))

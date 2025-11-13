@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
+import fastapi
 from sqlalchemy.orm import Session
 from typing import List
 
+from app.src.auth.dependencies import require_group
 from app.src.database.session import get_db
 from app.src.services import user_service
 from app.src.schema import UserCreate, UserUpdate, UserInDB

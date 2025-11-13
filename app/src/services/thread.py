@@ -21,6 +21,7 @@ class ThreadService:
         # Create the SQLAlchemy model instance from the Pydantic schema
         db_thread = ThreadModel(
             name=thread_in.name,
+            user_id=thread_in.user_id,
             allowed_sources=thread_in.allowed_sources
             # The database will handle defaults for created_at, updated_at
         )
@@ -58,6 +59,15 @@ class ThreadService:
         Retrieves a list of threads. Messages are not included for performance.
         """
         db_threads = thread_repo.get_multi(db, skip=skip, limit=limit)
+
+        # Use a list comprehension for clean and efficient mapping
+        return [Thread.from_orm(thread) for thread in db_threads]
+
+    def get_by_user_id(self, db: Session, user_id: int, skip: int = 0, limit: int = 100) -> List[Thread]:
+        """
+        Retrieves a list of threads by user ID. Messages are not included for performance.
+        """
+        db_threads = thread_repo.get_by_user_id(db, user_id=user_id, skip=skip, limit=limit)
 
         # Use a list comprehension for clean and efficient mapping
         return [Thread.from_orm(thread) for thread in db_threads]

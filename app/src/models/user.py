@@ -1,6 +1,7 @@
 from sqlalchemy import Integer, String, ForeignKey
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from app.src.database.base import Base
+from app.src.models.thread import Thread
 from typing import List, Optional
 
 class AccessGroup(Base):
@@ -29,3 +30,5 @@ class User(Base):
     # Relationship to AccessGroup (Many-to-One)
     # The type hint `Mapped[Optional["AccessGroup"]]` indicates this can be an AccessGroup or None.
     group: Mapped[Optional["AccessGroup"]] = relationship(back_populates="users")
+
+    threads: Mapped[List["Thread"]] = relationship(back_populates="owner")
