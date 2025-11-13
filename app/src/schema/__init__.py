@@ -16,9 +16,13 @@ from .token import (
     Token
 )
 
+from .chat_message import ChatMessage, ChatMessageBase, ChatMessageCreate, ChatMessageUpdate
+
+from .thread import Thread, ThreadBase, ThreadCreate, ThreadUpdate
+
 __all__ = [
     "UserBase",
-    "UserCreate", 
+    "UserCreate",
     "UserUpdate",
     "UserInDB",
     "AccessGroupBase",
@@ -26,5 +30,13 @@ __all__ = [
     "AccessGroupUpdate",
     "AccessGroupInDB",
     "Token",
-    "TokenData"
+    "TokenData",
+    "ChatMessage",
+    "ChatMessageBase",
+    "ChatMessageCreate",
+    "ChatMessageUpdate",
+    "Thread",
+    "ThreadBase",
+    "ThreadCreate",
+    "ThreadUpdate"
 ]

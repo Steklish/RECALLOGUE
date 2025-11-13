@@ -7,3 +7,10 @@ asyncpg
 python-dotenv
 uvicorn
 python-multipart
+google[genai]
+google.genai
+requests
+chromadb
+pdfplumber
+python-docx
+chardet

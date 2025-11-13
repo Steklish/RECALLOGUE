@@ -16,7 +16,6 @@ router = APIRouter(prefix="/test", tags=["Dev"])
 @router.get("/info", summary="Вывод информации о пользователе. Использует cookies для получения данных")
 def login_for_access_token(db: Session = Depends(get_db), user = Depends(get_current_user_from_cookie)):
     try:
-            
         return {
             "data" : user.__dict__
         }

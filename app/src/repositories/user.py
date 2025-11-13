@@ -6,7 +6,7 @@ from app.src.schema.user import UserCreateHashed, UserUpdateHashed
 from .base import BaseRepository
 
 
-class UserRepository(BaseRepository[User, UserCreateHashed]):
+class UserRepository(BaseRepository[User, UserCreateHashed, UserUpdateHashed]):
     def get_by_username(self, db: Session, username: str) -> Optional[User]:
         return db.query(User).filter(User.username == username).first()
 
@@ -20,7 +20,7 @@ class UserRepository(BaseRepository[User, UserCreateHashed]):
         return db_obj
 
 
-class AccessGroupRepository(BaseRepository[AccessGroup, AccessGroupCreate]):
+class AccessGroupRepository(BaseRepository[AccessGroup, AccessGroupCreate, AccessGroupUpdate]):
     def get_by_name(self, db: Session, name: str) -> Optional[AccessGroup]:
         return db.query(AccessGroup).filter(AccessGroup.name == name).first()
 

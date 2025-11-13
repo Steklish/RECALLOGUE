@@ -21,6 +21,9 @@ class Settings:
     SERVER_PORT: int = int(os.getenv("SERVER_PORT", "8000"))
     DEBUG: bool = os.getenv("DEBUG", "False").lower() == "true"
 
+    AI_GEN_RETRIES = int(os.getenv("AI_GEN_RETRIES", 3))
+    MODEL_ROLE = os.getenv("MODEL_ROLE", "model")
+    LLAMACPP_CHAT_BASE = os.getenv("LLAMACPP_CHAT_BASE", "http://localhost:8080")
 
 # Create a global instance of settings
 settings = Settings()

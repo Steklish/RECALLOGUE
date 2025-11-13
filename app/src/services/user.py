@@ -34,7 +34,7 @@ class AccessGroupService:
         return None
 
     def get_access_groups(self, db: Session, skip: int = 0, limit: int = 100) -> List[AccessGroupInDB]:
-        db_access_groups = access_group_repo.get_all(db, skip=skip, limit=limit)
+        db_access_groups = access_group_repo.get_multi(db, skip=skip, limit=limit)
         return [AccessGroupInDB.model_validate(ag) for ag in db_access_groups]
 
     def update_access_group(self, db: Session, access_group_id: int, 
@@ -95,7 +95,7 @@ class UserService:
         return None
 
     def get_users(self, db: Session, skip: int = 0, limit: int = 100) -> List[UserInDB]:
-        db_users = user_repo.get_all(db, skip=skip, limit=limit)
+        db_users = user_repo.get_multi(db, skip=skip, limit=limit)
         return [UserInDB.model_validate(user) for user in db_users]
 
     def update_user(self, db: Session, user_id: int, user_in: UserUpdate) -> Optional[UserInDB]:
