@@ -64,7 +64,7 @@ class LlamaGenAI:
                 user: Optional[str] = None, 
                 temperature: Optional[float] = None, 
                 max_tokens: Optional[int] = None,
-                payload: Optional[LLamaMessageHistory] = None,
+                payload = None,
                 grammar: Optional[str] = None) -> str:
         """Uses LLM to generate a string
 

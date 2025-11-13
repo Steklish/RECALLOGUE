@@ -19,7 +19,7 @@ class ChatMessageBase(BaseModel):
     content: str
     sources: Optional[List[Dict[str, Any]]] = None
     links: Optional[List[Dict[str, Any]]] = None
-    message_metadata: Optional[Dict[str, Any]] = Field(None, alias='metadata') # Use an alias if you want the API to use 'metadata'
+    message_metadata: Optional[Dict[str, Any]] = None
 
     # Allow a different name in the API ('metadata') than in the code ('message_metadata')
     class Config:

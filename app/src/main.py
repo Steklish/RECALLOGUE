@@ -5,13 +5,19 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Recallogue")
 
-# Include the routers
-app.include_router(user.router)
-app.include_router(access_group.router)
-app.include_router(login.router)
-app.include_router(dev.router)
+# This will be our sub-application to hold all the prefixed routes
+sub_app = FastAPI()
 
+# Include your routers in the sub-application
+sub_app.include_router(user.router)
+sub_app.include_router(access_group.router)
+sub_app.include_router(login.router)
+sub_app.include_router(dev.router)
 
+# Mount the sub-application with the global prefix "/api/v1"
+app.mount("/api/v1", sub_app)
+
+# Add middleware to the main application
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

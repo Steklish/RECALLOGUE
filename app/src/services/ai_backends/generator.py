@@ -8,7 +8,6 @@ from app.src.config import settings
 from app.src.services.ai_backends.google_gen import GoogleGenAI
 from app.src.services.ai_backends.llama_gen import LlamaGenAI
 from app.src.services.ai_backends.qwen_gen import QwenGenAI
-from app.src.services.ai_backends.schemas import LLamaMessageHistory, SystemLamaMessage, UserLamaMessage
 from app.src.utils.colors import *
 
 # A Generic Type Variable for our generator's return type
@@ -72,80 +71,6 @@ class Generator:
 
         raise ValueError("No JSON object found in the response.")
 
-    def generate_with_payload(self,
-        payload: LLamaMessageHistory,
-        pydantic_model: Type[T],
-        system_prompt: Optional[str] = None,
-        language: Optional[str] = None,
-        retries: int = settings.AI_GEN_RETRIES,
-        delay: int = 0,
-    ) -> T:
-        """
-        Generates a Pydantic instance by asking the model for a JSON response.
-
-        Args:
-            pydantic_model: The Pydantic class to create an instance of.
-        """    
-        schema_json = json.dumps(pydantic_model.model_json_schema(), indent=2)
-
-        language_instruction = ""
-        if language:
-            language_instruction = f"CRITICAL: All generated text content (like names, descriptions, effects, etc.) MUST be in the following language: {language}."
-
-        system_prompt = f"""You are a JSON generation robot. Your sole purpose is to generate a single, valid JSON object that conforms to the provided JSON schema.
-
-JSON Schema to follow:
-```json
-{schema_json}
-```
-
-Language Instruction:
-{language_instruction}
-
-Your response MUST be the raw JSON object, starting with `{{` and ending with `}}`.
-DO NOT include any introductory text, explanations, apologies, or markdown code fences.
-Your output will be directly parsed by a machine. Any character outside of the JSON object will cause a failure.
-Begin your response immediately with the opening curly brace `{{`."""
-        
-        payload.messages.insert(0, SystemLamaMessage(role="system", content=system_prompt)) 
-        payload.messages.append(UserLamaMessage(role="user", content="Based on our conversation, generate the JSON object now."))
-        
-        for i in range(retries):
-            print(
-                f"{HEADER_COLOR}Sending request to Local Llama Server{RESET} for: {ENTITY_COLOR}{pydantic_model.__name__}{RESET} (Language: {INFO_COLOR}{language or 'Default'}{RESET})"
-            )
-            try:
-                print(f"{INFO_COLOR} url {self.url}:{RESET}")
-                
-                # response = requests.post(self.url, headers=headers, json=data)
-                response_text = self.complete_funtion(
-                    payload=payload,
-                    temperature=0.7,
-                    max_tokens=2048)
-                
-                    
-                print(f"{SUCCESS_COLOR}Response received from Llama server.{RESET}")
-                cleaned_response = self._clean_json_response(response_text)
-                try:
-                    parsed_data = json.loads(cleaned_response)
-                    print(parsed_data)
-                except json.JSONDecodeError as e:
-                    print(f"{ERROR_COLOR}Error decoding JSON: {e}{RESET}")
-                    print(f"{WARNING_COLOR}Cleaned Response that failed parsing:{RESET}")
-                    print(cleaned_response)
-                    raise e
-                return pydantic_model(**parsed_data)
-            except (requests.exceptions.RequestException, json.JSONDecodeError, ValidationError, ValueError) as e:
-                print(
-                    f"Error processing response (attempt {i + 1}/{retries}): {e}"
-                )
-                if i < retries - 1:
-                    print(f"Retrying in {delay} seconds...")
-                    time.sleep(delay)
-                else:
-                    raise e
-        raise Exception("Failed to generate object after multiple retries.")
-        
         
     def generate_one_shot(
         self,
@@ -226,6 +151,15 @@ Begin your response immediately with the opening curly brace `{{`."""
             except (requests.exceptions.RequestException, json.JSONDecodeError, ValidationError, ValueError) as e:
                 print(
                     f"Error processing response (attempt {i + 1}/{retries}): {e}"
+                )
+                if i < retries - 1:
+                    print(f"Retrying in {delay} seconds...")
+                    time.sleep(delay)
+                else:
+                    raise e
+            except Exception as e:
+                print(
+                    f"Unexpected error during generation (attempt {i + 1}/{retries}): {e}"
                 )
                 if i < retries - 1:
                     print(f"Retrying in {delay} seconds...")

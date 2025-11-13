@@ -1,4 +1,5 @@
 from .user import User, AccessGroup
-from .chat_message import ChatMessage, Thread
+from .thread import Thread
+from .chat_message import ChatMessage
 
-__all__ = ["User", "AccessGroup", "ChatMessage", "Thread"]
+__all__ = ["User", "AccessGroup", "Thread", "ChatMessage"]

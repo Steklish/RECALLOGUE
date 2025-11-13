@@ -174,6 +174,10 @@ def normalize_text(text: str) -> str:
 
 def chunk_text(text: str, chunk_size: int = 800, overlap: int = 120) -> List[str]:
     # chunk_size и overlap считаем в словах
+    # If the input text is too short to benefit from the detailed chunking, return it as-is
+    if len(text.split()) < 5:
+        return [text.strip()] if text.strip() else []
+    
     sents = _split_sentences(text)
     chunks, cur, cur_len = [], [], 0
     for s in sents:
@@ -194,5 +198,8 @@ def chunk_text(text: str, chunk_size: int = 800, overlap: int = 120) -> List[str
         joined = " ".join(cur).strip()
         if joined:
             chunks.append(joined)
+    
     # фильтр совсем коротких
-    return [c for c in chunks if len(c.split()) >= 5]
+    # If all chunks are below the threshold, return them anyway to avoid empty results
+    filtered_chunks = [c for c in chunks if len(c.split()) >= 5]
+    return filtered_chunks if filtered_chunks else chunks

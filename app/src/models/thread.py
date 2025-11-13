@@ -1,5 +1,5 @@
 from typing import List
-from sqlalchemy import ARRAY, Column, Integer, String, DateTime, Text, JSON, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Text, JSON, ForeignKey
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import datetime
 from app.src.database.base import Base
@@ -12,4 +12,4 @@ class Thread(Base):
     name: Mapped[str] = mapped_column(String, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    allowed_sources: Mapped[List[str]] = mapped_column(ARRAY(String), nullable=True)
+    allowed_sources: Mapped[List[str]] = mapped_column(JSON, nullable=True)

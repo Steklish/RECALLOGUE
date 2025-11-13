@@ -82,6 +82,10 @@ class EmbeddingClient:
                 print(f"Failed to parse embeddings from server response: {e}")
                 print(f"Received data: {data}")
                 all_embeddings.extend([[]] * len(batch))
+            except Exception as e:
+                print(f"An unexpected error occurred during embedding: {e}")
+                # Pad with empty embeddings for the failed batch
+                all_embeddings.extend([[]] * len(batch))
         return all_embeddings
 
     def _get_model_from_server(self):

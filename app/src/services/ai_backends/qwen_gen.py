@@ -29,7 +29,7 @@ class QwenGenAI:
                  user: Optional[str] = None,
                  temperature: Optional[float] = 0.7,
                  max_tokens: Optional[int] = 1024,
-                 payload: Optional[LLamaMessageHistory] = None) -> str:
+                 payload = None) -> str:
         """
         Generates a response from the Qwen model via OpenRouter API.
 
