@@ -3,7 +3,7 @@ import { useAuth } from './contexts/AuthContext';
 import Login from './components/auth/Login';
 import MainApp from './MainApp';
 
-function App() {
+const AppWrapper = () => {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
@@ -19,6 +19,6 @@ function App() {
   }
 
   return <MainApp />;
-}
+};
 
-export default App;
+export default AppWrapper;

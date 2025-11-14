@@ -30,3 +30,11 @@ def login_for_access_token(response: Response, db: Session = Depends(get_db), fo
         path="/"
     )
     return token
+
+@router.post("/logout")
+def logout(response: Response):
+    """
+    Handles the user logout and clears the access token cookie.
+    """
+    response.delete_cookie(key="access_token", path="/")
+    return {"detail": "Successfully logged out"}

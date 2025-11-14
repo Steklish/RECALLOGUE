@@ -56,7 +56,7 @@ def get_user_threads(
     Retrieve all threads owned by the currently authenticated user.
     """
     # Correct implementation requires fetching by user ID
-    return thread_service.get_by_user_id(db, user_id=current_user.id, skip=skip, limit=limit)
+    return thread_service.get_by_user_id(db, user_id=current_user.id, skip=skip, limit=limit) # type: ignore
     
 
 @router.get("/{thread_id}", response_model=Thread)

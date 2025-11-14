@@ -1,4 +1,36 @@
-# React + Vite
+# Recallogue UI
+
+This is the frontend application for Recallogue, featuring a chat interface with document management capabilities and authentication.
+
+## Environment Variables
+
+Create a `.env` file in the root of the project with the following variables:
+
+```
+VITE_API_BASE_URL=http://localhost:8000
+```
+
+Replace with your actual backend server address.
+
+## Running the Application
+
+To install dependencies:
+```bash
+npm install
+```
+
+To start the development server:
+```bash
+npm run dev
+```
+
+## Features
+
+- User authentication and session management
+- Thread-based chat interface
+- Document management system
+- Settings panel with model configuration
+- Real-time message streaming
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

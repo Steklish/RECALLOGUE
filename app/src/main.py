@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.src.database import init_db, engine
-from app.src.api.routers import dev, login, threads, user, access_group
+from app.src.api.routers import dev, login, threads, user, access_group, chat
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Recallogue")
@@ -14,6 +14,7 @@ sub_app.include_router(access_group.router)
 sub_app.include_router(login.router)
 sub_app.include_router(dev.router)
 sub_app.include_router(threads.router)
+sub_app.include_router(chat.router)
 
 # Mount the sub-application with the global prefix "/api/v1"
 app.mount("/api/v1", sub_app)
@@ -21,7 +22,7 @@ app.mount("/api/v1", sub_app)
 # Add middleware to the main application
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:3000", "http://localhost:3001", "http://localhost:8080"],  # Common development ports
     allow_credentials=True,  # <-- Important for cookies
     allow_methods=["*"],     # <-- Allows all methods (GET, POST, etc.)
     allow_headers=["*"],     # <-- Allows all headers

@@ -1,6 +1,5 @@
 import os
 from typing import Optional
-# Corrected import for modern google-generativeai library
 from google import generativeai as genai 
 from google.generativeai import types
 from app.src.services.ai_backends.schemas import *
@@ -21,13 +20,13 @@ class GoogleGenAI:
             raise ValueError("GEMINI_API_KEY environment variable not set.")
         
         # The client is configured upon import or via genai.configure()
-        genai.configure(api_key=api_key)
+        genai.configure(api_key=api_key) # pyright: ignore[reportPrivateImportUsage]
         
         # The model is instantiated, not just a name stored
         self.model_name = os.getenv("GEMINI_MODEL")
         if not self.model_name:
             raise ValueError("GEMINI_MODEL environment variable not set.")
-        self.model = genai.GenerativeModel(self.model_name)
+        self.model = genai.GenerativeModel(self.model_name) # pyright: ignore[reportPrivateImportUsage]
         
     def get_model(self):
         return self.model_name

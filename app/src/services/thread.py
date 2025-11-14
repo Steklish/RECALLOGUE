@@ -54,6 +54,17 @@ class ThreadService:
 
         return thread
 
+    def verify_thread_ownership(self, db: Session, thread_id: int, user_id: int) -> bool:
+        """
+        Verifies if a thread exists and belongs to a specific user.
+        Returns True if the thread exists and belongs to the user, False otherwise.
+        """
+        db_thread = thread_repo.get(db, id=thread_id)
+        if not db_thread:
+            return False
+
+        return db_thread.user_id == user_id
+
     def get_all(self, db: Session, skip: int = 0, limit: int = 100) -> List[Thread]:
         """
         Retrieves a list of threads. Messages are not included for performance.

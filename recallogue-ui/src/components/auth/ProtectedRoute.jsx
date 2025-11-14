@@ -1,9 +1,8 @@
 import React from 'react';
-import { useAuth } from './contexts/AuthContext';
-import Login from './components/auth/Login';
-import MainApp from './MainApp';
+import { useAuth } from '../contexts/AuthContext';
+import Login from '../components/auth/Login';
 
-function App() {
+const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
@@ -18,7 +17,7 @@ function App() {
     return <Login />;
   }
 
-  return <MainApp />;
-}
+  return children;
+};
 
-export default App;
+export default ProtectedRoute;

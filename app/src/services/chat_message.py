@@ -113,6 +113,25 @@ class ChatMessageService:
         )
         return [ChatMessage.from_orm(msg) for msg in db_messages]
 
+    def update_message(self, db: Session, message_id: int, message_update: ChatMessageUpdate) -> Optional[ChatMessage]:
+        """
+        Updates an existing message.
+        """
+        db_message = chat_message_repo.get(db, id=message_id)
+        if not db_message:
+            return None
+
+        # Update the message fields based on the update schema
+        update_data = message_update.dict(exclude_unset=True)
+        for field, value in update_data.items():
+            if hasattr(db_message, field):
+                setattr(db_message, field, value)
+
+        db.commit()
+        db.refresh(db_message)
+
+        return ChatMessage.from_orm(db_message)
+
     def delete_message(self, db: Session, message_id: int) -> bool:
         """
         Deletes a message by its ID.
